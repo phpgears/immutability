@@ -1,6 +1,7 @@
 !.gitignore
-!composer.lock
-/vendor
+composer.lock
+cghooks.lock
+vendor/
 *.cache
 infection-log.*
-cghooks.lock
+build/

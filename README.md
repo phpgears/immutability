@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/github/license/phpgears/immutability.svg?style=flat-square)](https://github.com/phpgears/immutability/blob/master/LICENSE)
 
 [![Build Status](https://img.shields.io/travis/phpgears/immutability.svg?style=flat-square)](https://travis-ci.org/phpgears/immutability)
-[![Style Check](https://styleci.io/repos/xxxxxx/shield)](https://styleci.io/repos/xxxxxx)
+[![Style Check](https://styleci.io/repos/148840927/shield)](https://styleci.io/repos/148840927)
 [![Code Quality](https://img.shields.io/scrutinizer/g/phpgears/immutability.svg?style=flat-square)](https://scrutinizer-ci.com/g/phpgears/immutability)
 [![Code Coverage](https://img.shields.io/coveralls/phpgears/immutability.svg?style=flat-square)](https://coveralls.io/github/phpgears/immutability)
 

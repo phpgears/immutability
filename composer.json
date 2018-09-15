@@ -31,9 +31,10 @@
     "phpmd/phpmd": "^2.0",
     "phpstan/phpstan": "^0.10",
     "phpstan/phpstan-deprecation-rules": "^0.10",
-    "phpstan/phpstan-phpunit": "^0.10.0",
+    "phpstan/phpstan-phpunit": "^0.10",
     "phpstan/phpstan-strict-rules": "^0.10",
     "phpunit/phpunit": "^7.0",
+    "povils/phpmnd": "^2.0",
     "roave/security-advisories": "dev-master",
     "sebastian/phpcpd": "^4.0",
     "squizlabs/php_codesniffer": "^2.0",
@@ -67,6 +68,7 @@
     "fix-phpcs": "php-cs-fixer fix --config=.php_cs --verbose",
     "qa-phpcpd": "phpcpd src",
     "qa-phpmd": "phpmd src text unusedcode,naming,design,controversial,codesize",
+    "qa-phpmnd": "phpmnd ./ --exclude=tests",
     "qa-phpstan": "phpstan analyse --configuration=phpstan.neon --memory-limit=2G --no-progress",
     "test-phpunit": "phpunit",
     "test-infection": "infection",
@@ -83,12 +85,14 @@
     "qa": [
       "@qa-phpcpd",
       "@qa-phpmd",
+      "@qa-phpmnd",
       "@qa-phpstan"
     ],
     "test": [
       "@test-phpunit",
       "@test-infection"
     ],
+    "security": "composer outdated",
     "report": [
       "report-phpunit-coverage",
       "report-phpunit-clover"

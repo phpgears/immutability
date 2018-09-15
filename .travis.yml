@@ -40,7 +40,6 @@ install:
 
 script:
   - if [[ $TEST_VERSION ]]; then composer qa && composer report-phpunit-clover ; fi
-
   - if [[ -z $TEST_VERSION ]]; then composer test-phpunit ; fi
 
 after_script:
