@@ -33,7 +33,7 @@
     "phpstan/phpstan-deprecation-rules": "^0.10",
     "phpstan/phpstan-phpunit": "^0.10",
     "phpstan/phpstan-strict-rules": "^0.10",
-    "phpunit/phpunit": "^7.0",
+    "phpunit/phpunit": "^6.0|^7.0",
     "povils/phpmnd": "^2.0",
     "roave/security-advisories": "dev-master",
     "sebastian/phpcpd": "^4.0",

@@ -160,6 +160,8 @@ trait ImmutabilityBehaviour
     /**
      * @param string  $method
      * @param mixed[] $parameters
+     *
+     * @return mixed
      */
     final public function __call(string $method, array $parameters)
     {
