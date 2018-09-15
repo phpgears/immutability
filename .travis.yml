@@ -13,17 +13,16 @@ env:
   - COMPOSER_FLAGS="--prefer-stable --prefer-dist"
 
 php:
-  - 7.1
   - 7.2
   - nightly
 
 matrix:
   fast_finish: true
   include:
-    - php: 7
+    - php: 7.1
       env:
         - COMPOSER_FLAGS="--prefer-lowest --prefer-stable --prefer-dist"
-    - php: 7
+    - php: 7.1
       env:
         - TEST_VERSION=true
         - COMPOSER_FLAGS="--prefer-stable --prefer-dist"
