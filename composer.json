@@ -70,8 +70,8 @@
     "qa-phpstan": "phpstan analyse --configuration=phpstan.neon --memory-limit=2G --no-progress",
     "test-phpunit": "phpunit",
     "test-infection": "infection",
-    "phpunit-coverage": "phpunit --coverage-html build/coverage",
-    "phpunit-clover": "phpunit --coverage-clover build/logs/clover.xml",
+    "report-phpunit-coverage": "phpunit --coverage-html build/coverage",
+    "report-phpunit-clover": "phpunit --coverage-clover build/logs/clover.xml",
     "lint": [
       "@lint-php",
       "@lint-phpcs",
@@ -88,6 +88,10 @@
     "test": [
       "@test-phpunit",
       "@test-infection"
+    ],
+    "report": [
+      "report-phpunit-coverage",
+      "report-phpunit-clover"
     ]
   },
   "extra": {
