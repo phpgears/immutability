@@ -46,6 +46,13 @@ trait ImmutabilityBehaviour
     ];
 
     /**
+     * Single constructor call check.
+     *
+     * @var bool
+     */
+    protected $alreadyConstructed = false;
+
+    /**
      * Check immutability.
      *
      * @throws ImmutabilityViolationException
@@ -53,6 +60,8 @@ trait ImmutabilityBehaviour
     final protected function checkImmutability(): void
     {
         $class = static::class;
+
+        $this->checkConstructCall();
 
         if (isset(static::$immutabilityCheckMap[$class])) {
             return;
@@ -62,6 +71,23 @@ trait ImmutabilityBehaviour
         $this->checkMethodsAccessibility();
 
         static::$immutabilityCheckMap[$class] = true;
+    }
+
+    /**
+     * Check __construct method is called only once.
+     *
+     * @throws ImmutabilityViolationException
+     */
+    final protected function checkConstructCall(): void
+    {
+        if ($this->alreadyConstructed) {
+            throw new ImmutabilityViolationException(\sprintf(
+                'Method %s::__construct was already called',
+                static::class
+            ));
+        }
+
+        $this->alreadyConstructed = true;
     }
 
     /**
