@@ -50,7 +50,7 @@ trait ImmutabilityBehaviour
      *
      * @var bool
      */
-    protected $alreadyConstructed = false;
+    private $alreadyConstructed = false;
 
     /**
      * Check immutability.
@@ -59,9 +59,9 @@ trait ImmutabilityBehaviour
      */
     final protected function checkImmutability(): void
     {
-        $class = static::class;
-
         $this->checkConstructCall();
+
+        $class = static::class;
 
         if (isset(static::$immutabilityCheckMap[$class])) {
             return;
@@ -78,7 +78,7 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    final protected function checkConstructCall(): void
+    private function checkConstructCall(): void
     {
         if ($this->alreadyConstructed) {
             throw new ImmutabilityViolationException(\sprintf(
@@ -95,7 +95,7 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    final protected function checkPropertiesAccessibility(): void
+    private function checkPropertiesAccessibility(): void
     {
         $publicProperties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
         if (\count($publicProperties) !== 0) {
@@ -111,7 +111,7 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    final protected function checkMethodsAccessibility(): void
+    private function checkMethodsAccessibility(): void
     {
         $publicMethods = $this->getClassPublicMethods();
         \sort($publicMethods);
@@ -141,7 +141,7 @@ trait ImmutabilityBehaviour
      *
      * @return string[]
      */
-    final protected function getClassPublicMethods(): array
+    private function getClassPublicMethods(): array
     {
         return \array_filter(\array_map(
             function (\ReflectionMethod $method): string {
