@@ -32,9 +32,11 @@ require_once './vendor/autoload.php';
 
 ## Usage
 
-ImmutabilityBehaviour trait enforces you to avoid public properties and not create any public methods (other than __construct) on your class by calling `checkImmutability` method on object construction, **always and only in the constructor**
+ImmutabilityBehaviour trait enforces you to avoid public properties and mutable methods in your class by calling `checkImmutability` method on object construction
 
-This mentioned behaviour let alone would run your objects completely useless so you must provide an implementation of the abstract method `getAllowedInterfaces`, returning a list of interfaces whose public methods will be allowed in your class. Although _discouraged_ you can also provide classes as it can prove useful in some cases
+This mentioned behaviour let alone would run your objects completely useless so you must provide an implementation of the abstract method `getAllowedInterfaces`, returning a list of interfaces whose public methods will be allowed in your class. Even though it is _discouraged_, you can also provide class names as it can prove useful in some cases, use wisely
+
+Few PHP magic methods are allowed to be defined as public, namely __construct,__destruct, __get, __isset, __sleep, __wakeup, __toString, __set_state, __clone, __debugInfo
 
 ```php
 use Gears\Immutability\ImmutabilityBehaviour;
@@ -52,9 +54,7 @@ class MyObject implements MyInterface
     use ImmutabilityBehaviour;
 
     /**
-     * MyObject class constructor.
-     *
-     * Constructors are always allowed.
+     * MyObject constructor.
      */
     final protected function __construct()
     {
@@ -89,15 +89,15 @@ class MyObject implements MyInterface
 }
 ```
 
-It is of **absolute importance** to either mark your class as final or mark your implementation of `getAllowedInterfaces` as final, not fulfilling this requirement will end up with child objects being able to override getAllowedInterfaces method and thus rendering immutability check useless
+It is of **absolute importance** to either set your class as final or mark your implementation of `getAllowedInterfaces` as final, not fulfilling this requirement will end up with child objects being able to override getAllowedInterfaces method and thus rendering immutability check useless
 
-Although not mandatory it is advice to make your constructors final and force developers to create static named constructors
+Although not mandatory it is advice to make your constructors _protected_ and force developers to create static named constructors
 
 From now on you can focus only on those methods defined in your interfaces and ensure they do not mutate your object, this task is up to you only, with the confidence no other developer would mutate your object by accident or intentionally
 
 ### Example
 
-If you want to have a look at a working example implementation of immutability have a look at [phpgears/dto](https://github.com/phpgears/dto), [phpgears/identity](https://github.com/phpgears/identity) or [phpgears/cqrs](https://github.com/phpgears/cqrs)
+If you want to have a look at a working example implementations of immutable objects have a look at [phpgears/dto](https://github.com/phpgears/dto), [phpgears/identity](https://github.com/phpgears/identity) or [phpgears/cqrs](https://github.com/phpgears/cqrs)
 
 ## Contributing
 

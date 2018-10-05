@@ -59,7 +59,7 @@ trait ImmutabilityBehaviour
      */
     final protected function checkImmutability(): void
     {
-        $this->checkConstructCall();
+        $this->checkCallConstraints();
 
         $class = static::class;
 
@@ -74,16 +74,29 @@ trait ImmutabilityBehaviour
     }
 
     /**
-     * Check __construct method is called only once.
+     * Check __construct method constraints.
      *
      * @throws ImmutabilityViolationException
      */
-    private function checkConstructCall(): void
+    private function checkCallConstraints(): void
     {
         if ($this->alreadyConstructed) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Method %s::__construct was already called',
+                'Class %s constructor was already called',
                 static::class
+            ));
+        }
+
+        $stack = \debug_backtrace();
+        while (\count($stack) > 0 && $stack[0]['function'] !== 'checkImmutability') {
+            \array_shift($stack);
+        }
+
+        if (!isset($stack[1]) || $stack[1]['function'] !== '__construct') {
+            throw new ImmutabilityViolationException(\sprintf(
+                'Immutability check can only be called from constructor, called from %s::%s',
+                static::class,
+                $stack[1]['function']
             ));
         }
 

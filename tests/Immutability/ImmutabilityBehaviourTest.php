@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Gears\Immutability\Tests;
 
+use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourCheckFromMethodStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMultipleConstructorStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMutableMethodStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMutablePropertyStub;
@@ -44,13 +45,24 @@ class ImmutabilityBehaviourTest extends TestCase
 
     /**
      * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /Method .+::__construct was already called$/
+     * @expectedExceptionMessageRegExp /Class .+ constructor was already called$/
      */
     public function testMultipleConstructorCall(): void
     {
         $stub = new ImmutabilityBehaviourMultipleConstructorStub('value');
 
         $stub->callConstructor();
+    }
+
+    /**
+     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
+     * @expectedExceptionMessageRegExp /^Immutability check can only be called from constructor, called from .+::check$/
+     */
+    public function testCheckFromMethod(): void
+    {
+        $stub = new ImmutabilityBehaviourCheckFromMethodStub('value');
+
+        $stub->check();
     }
 
     public function testSingleImmutabilityCheck(): void
