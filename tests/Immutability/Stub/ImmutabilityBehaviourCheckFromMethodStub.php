@@ -56,6 +56,26 @@ class ImmutabilityBehaviourCheckFromMethodStub implements ImmutabilityBehaviourS
     /**
      * {@inheritdoc}
      */
+    public function serialize(): string
+    {
+        return \serialize($this->parameter);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param mixed $serialized
+     */
+    public function unserialize($serialized): void
+    {
+        $this->checkImmutability();
+
+        $this->parameter = \unserialize($serialized);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getAllowedInterfaces(): array
     {
         return [self::class];

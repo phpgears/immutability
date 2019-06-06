@@ -86,6 +86,15 @@ class ImmutabilityBehaviourTest extends TestCase
         $this->assertFalse($check);
     }
 
+    public function testSerializableImmutabilityCheck(): void
+    {
+        $immutable = new ImmutabilityBehaviourStub('value');
+
+        $serialized = \serialize($immutable);
+
+        $this->assertEquals($immutable, \unserialize($serialized));
+    }
+
     /**
      * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
      * @expectedExceptionMessageRegExp /Class .+ properties cannot be mutated/

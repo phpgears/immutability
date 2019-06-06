@@ -92,7 +92,11 @@ trait ImmutabilityBehaviour
             \array_shift($stack);
         }
 
-        if (!isset($stack[1]) || $stack[1]['function'] !== '__construct') {
+        $serializable = \in_array(\Serializable::class, \class_implements($this));
+        if (!isset($stack[1])
+            || ($serializable && !\in_array($stack[1]['function'], ['__construct', 'unserialize']))
+            || (!$serializable && $stack[1]['function'] !== '__construct')
+        ) {
             throw new ImmutabilityViolationException(\sprintf(
                 'Immutability check can only be called from constructor, called from %s::%s',
                 static::class,

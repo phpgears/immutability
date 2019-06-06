@@ -16,7 +16,7 @@ namespace Gears\Immutability\Tests\Stub;
 /**
  * ImmutabilityBehaviourStubInterface.
  */
-interface ImmutabilityBehaviourStubInterface
+interface ImmutabilityBehaviourStubInterface extends \Serializable
 {
     /**
      * @return string
