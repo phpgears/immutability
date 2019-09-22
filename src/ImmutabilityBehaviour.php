@@ -86,8 +86,6 @@ trait ImmutabilityBehaviour
         $this->assertPropertiesVisibility();
         $this->assertMethodsVisibility();
 
-        $this->immutabilityAlreadyChecked = true;
-
         static::$immutabilityCheckMap[$class] = true;
     }
 
@@ -104,6 +102,8 @@ trait ImmutabilityBehaviour
                 static::class
             ));
         }
+
+        $this->immutabilityAlreadyChecked = true;
     }
 
     /**
