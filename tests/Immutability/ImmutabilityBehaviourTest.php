@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Gears\Immutability\Tests;
 
+use Gears\Immutability\Exception\ImmutabilityViolationException;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourCheckFromMethodStub;
+use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourDeprecatedStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMultipleConstructorStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMutableMethodStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMutablePropertyStub;
@@ -25,41 +27,45 @@ use PHPUnit\Framework\TestCase;
  */
 class ImmutabilityBehaviourTest extends TestCase
 {
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /.+\ImmutabilityBehaviourMutablePropertyStub should not have public properties$/
-     */
     public function testMutableProperty(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+\ImmutabilityBehaviourMutablePropertyStub" should not have public properties$/'
+        );
+
         new ImmutabilityBehaviourMutablePropertyStub('value');
     }
 
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /Class .+\ImmutabilityBehaviourMutableMethodStub should not have public methods$/
-     */
     public function testMutableMethod(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+\ImmutabilityBehaviourMutableMethodStub" should not have public methods$/'
+        );
+
         new ImmutabilityBehaviourMutableMethodStub('value');
     }
 
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /Class .+ constructor was already called$/
-     */
     public function testMultipleConstructorCall(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class .+ was already checked for immutability$/'
+        );
+
         $stub = new ImmutabilityBehaviourMultipleConstructorStub('value');
 
         $stub->callConstructor();
     }
 
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /^Immutability check can only be called from constructor, called from .+::check$/
-     */
     public function testCheckFromMethod(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Immutability check must be called from constructor or "unserialize" methods, called from ".+::check"$/'
+        );
+
         $stub = new ImmutabilityBehaviourCheckFromMethodStub('value');
 
         $stub->check();
@@ -95,47 +101,59 @@ class ImmutabilityBehaviourTest extends TestCase
         $this->assertEquals($immutable, \unserialize($serialized));
     }
 
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /Class .+ properties cannot be mutated/
-     */
     public function testInvalidMethodCall(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+" properties cannot be mutated$/'
+        );
+
         $stub = new ImmutabilityBehaviourStub('value');
 
         $stub->unknownMethod();
     }
 
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /Class .+ properties cannot be mutated/
-     */
     public function testInvalidMethodSet(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+" properties cannot be mutated$/'
+        );
+
         $stub = new ImmutabilityBehaviourStub('value');
 
         $stub->unknownAttribute = '';
     }
 
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessageRegExp /Class .+ properties cannot be mutated/
-     */
     public function testInvalidMethodUnset(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+" properties cannot be mutated$/'
+        );
+
         $stub = new ImmutabilityBehaviourStub('value');
 
         unset($stub->unknownAttribute);
     }
 
-    /**
-     * @expectedException \Gears\Immutability\Exception\ImmutabilityViolationException
-     * @expectedExceptionMessage Invocation is not allowed
-     */
     public function testInvalidMethodInvoke(): void
     {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessage('Invocation is not allowed');
+
         $stub = new ImmutabilityBehaviourStub('value');
 
         $stub();
+    }
+
+    public function testDeprecatedCheck(): void
+    {
+        new ImmutabilityBehaviourDeprecatedStub('value');
+
+        static::assertEquals(
+            'Calling the "checkImmutability()" method is deprecated. Use "assertImmutable()" method instead',
+            \error_get_last()['message']
+        );
     }
 }

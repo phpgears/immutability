@@ -32,7 +32,7 @@ require_once './vendor/autoload.php';
 
 ## Usage
 
-ImmutabilityBehaviour trait enforces you to avoid public properties and mutable methods in your class by calling `checkImmutability` method on object construction and `unserialize` method if Serializable interface is implemented
+ImmutabilityBehaviour trait enforces you to avoid public properties and mutable methods in your class by calling `assertImmutable` method on object construction and `unserialize` methods if Serializable interface is implemented
 
 This mentioned behaviour let alone would run your objects completely useless so you must provide an implementation of the abstract method `getAllowedInterfaces`, returning a list of interfaces whose public methods will be allowed in your class. Even though it is _discouraged_, you can also provide class names as it can prove useful in some cases, use wisely
 
@@ -58,7 +58,7 @@ class MyObject implements MyInterface
      */
     final protected function __construct()
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
     }
 
     /**
@@ -92,7 +92,7 @@ class MyObject implements MyInterface
      */
     final public function unserialize($serialized): void
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         // unserialize
     }

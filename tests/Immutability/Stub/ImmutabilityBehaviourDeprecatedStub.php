@@ -18,7 +18,7 @@ use Gears\Immutability\ImmutabilityBehaviour;
 /**
  * ImmutabilityBehaviour trait stub class.
  */
-class ImmutabilityBehaviourStub implements ImmutabilityBehaviourStubInterface
+class ImmutabilityBehaviourDeprecatedStub implements ImmutabilityBehaviourStubInterface
 {
     use ImmutabilityBehaviour;
 
@@ -34,7 +34,7 @@ class ImmutabilityBehaviourStub implements ImmutabilityBehaviourStubInterface
      */
     public function __construct(string $parameter)
     {
-        $this->assertImmutable();
+        $this->checkImmutability();
 
         $this->parameter = $parameter;
     }

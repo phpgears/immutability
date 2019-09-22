@@ -50,7 +50,7 @@ class ImmutabilityBehaviourCheckFromMethodStub implements ImmutabilityBehaviourS
      */
     public function check(): void
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
     }
 
     /**
@@ -68,7 +68,7 @@ class ImmutabilityBehaviourCheckFromMethodStub implements ImmutabilityBehaviourS
      */
     public function unserialize($serialized): void
     {
-        $this->checkImmutability();
+        $this->assertImmutable();
 
         $this->parameter = \unserialize($serialized);
     }

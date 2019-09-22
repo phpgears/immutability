@@ -29,15 +29,16 @@
     "friendsofphp/php-cs-fixer": "^2.0",
     "infection/infection": "^0.9",
     "phpmd/phpmd": "^2.0",
-    "phpstan/phpstan": "^0.10",
-    "phpstan/phpstan-deprecation-rules": "^0.10",
-    "phpstan/phpstan-strict-rules": "^0.10",
-    "phpunit/phpunit": "^6.0|^7.0",
+    "phpstan/extension-installer": "^1.0",
+    "phpstan/phpstan": "~0.11.12",
+    "phpstan/phpstan-deprecation-rules": "~0.11.2",
+    "phpstan/phpstan-strict-rules": "~0.11.1",
+    "phpunit/phpunit": "^7.0|^8.0",
     "povils/phpmnd": "^2.0",
     "roave/security-advisories": "dev-master",
-    "sebastian/phpcpd": "^3.0|^4.0",
-    "squizlabs/php_codesniffer": "^2.0",
-    "thecodingmachine/phpstan-strict-rules": "^0.10.1"
+    "sebastian/phpcpd": "^4.0",
+    "squizlabs/php_codesniffer": "^3.0",
+    "thecodingmachine/phpstan-strict-rules": "^0.11.2"
   },
   "suggest": {
   },
@@ -87,14 +88,14 @@
       "@qa-phpmnd",
       "@qa-phpstan"
     ],
+    "security": "composer outdated",
     "test": [
       "@test-phpunit",
       "@test-infection"
     ],
-    "security": "composer outdated",
     "report": [
-      "report-phpunit-coverage",
-      "report-phpunit-clover"
+      "@report-phpunit-coverage",
+      "@report-phpunit-clover"
     ]
   },
   "extra": {

@@ -50,16 +50,31 @@ trait ImmutabilityBehaviour
      *
      * @var bool
      */
-    private $alreadyConstructed = false;
+    private $immutabilityAlreadyChecked = false;
 
     /**
-     * Check immutability.
+     * Alias of assertImmutable.
      *
-     * @throws ImmutabilityViolationException
+     * @deprecated use assertImmutable instead
      */
     final protected function checkImmutability(): void
     {
-        $this->checkCallConstraints();
+        @\trigger_error(
+            'Calling the "checkImmutability()" method is deprecated. Use "assertImmutable()" method instead',
+            \E_USER_DEPRECATED
+        );
+
+        $this->assertImmutable();
+    }
+
+    /**
+     * Assert object immutability.
+     *
+     * @throws ImmutabilityViolationException
+     */
+    final protected function assertImmutable(): void
+    {
+        $this->assertSingleCheck();
 
         $class = static::class;
 
@@ -67,68 +82,92 @@ trait ImmutabilityBehaviour
             return;
         }
 
-        $this->checkPropertiesAccessibility();
-        $this->checkMethodsAccessibility();
+        $this->assertCallConstraints();
+        $this->assertPropertiesVisibility();
+        $this->assertMethodsVisibility();
+
+        $this->immutabilityAlreadyChecked = true;
 
         static::$immutabilityCheckMap[$class] = true;
     }
 
     /**
-     * Check __construct method constraints.
+     * Assert single immutability check.
      *
      * @throws ImmutabilityViolationException
      */
-    private function checkCallConstraints(): void
+    private function assertSingleCheck(): void
     {
-        if ($this->alreadyConstructed) {
+        if ($this->immutabilityAlreadyChecked) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Class %s constructor was already called',
+                'Class "%s" was already checked for immutability',
                 static::class
             ));
         }
-
-        $stack = \debug_backtrace();
-        while (\count($stack) > 0 && $stack[0]['function'] !== 'checkImmutability') {
-            \array_shift($stack);
-        }
-
-        $serializable = \in_array(\Serializable::class, \class_implements($this));
-        if (!isset($stack[1])
-            || ($serializable && !\in_array($stack[1]['function'], ['__construct', 'unserialize']))
-            || (!$serializable && $stack[1]['function'] !== '__construct')
-        ) {
-            throw new ImmutabilityViolationException(\sprintf(
-                'Immutability check can only be called from constructor, called from %s::%s',
-                static::class,
-                $stack[1]['function']
-            ));
-        }
-
-        $this->alreadyConstructed = true;
     }
 
     /**
-     * Check properties accessibility.
+     * Assert immutability check call constraints.
      *
      * @throws ImmutabilityViolationException
      */
-    private function checkPropertiesAccessibility(): void
+    private function assertCallConstraints(): void
+    {
+        $serializable = \in_array(\Serializable::class, \class_implements($this), true);
+        $stack = $this->getFilteredCallStack();
+
+        if (!isset($stack[1])
+            || ($serializable && !\in_array($stack[1]['function'], ['__construct', 'unserialize'], true))
+            || (!$serializable && $stack[1]['function'] !== '__construct')
+        ) {
+            throw new ImmutabilityViolationException(\sprintf(
+                'Immutability check must be called from constructor or "unserialize" methods, called from "%s"',
+                isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
+            ));
+        }
+    }
+
+    /**
+     * Get filter call stack.
+     *
+     * @return mixed[]
+     */
+    private function getFilteredCallStack(): array
+    {
+        $stack = \debug_backtrace();
+        while (\count($stack) > 0 && $stack[0]['function'] !== 'assertImmutable') {
+            \array_shift($stack);
+        }
+
+        if (isset($stack[1]) && $stack[1]['function'] === 'checkImmutability') {
+            \array_shift($stack);
+        }
+
+        return $stack;
+    }
+
+    /**
+     * Check properties visibility.
+     *
+     * @throws ImmutabilityViolationException
+     */
+    private function assertPropertiesVisibility(): void
     {
         $publicProperties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
         if (\count($publicProperties) !== 0) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Class %s should not have public properties',
+                'Class "%s" should not have public properties',
                 static::class
             ));
         }
     }
 
     /**
-     * Check methods accessibility.
+     * Check methods visibility.
      *
      * @throws ImmutabilityViolationException
      */
-    private function checkMethodsAccessibility(): void
+    private function assertMethodsVisibility(): void
     {
         $publicMethods = $this->getClassPublicMethods();
         \sort($publicMethods);
@@ -136,7 +175,7 @@ trait ImmutabilityBehaviour
         $allowedPublicMethods = $this->getAllowedPublicMethods();
 
         foreach (static::$allowedMagicMethods as $magicMethod) {
-            if (\array_search($magicMethod, $publicMethods, true) !== false) {
+            if (\in_array($magicMethod, $publicMethods, true)) {
                 $allowedPublicMethods[] = $magicMethod;
             }
         }
@@ -147,7 +186,7 @@ trait ImmutabilityBehaviour
             || \count(\array_diff($allowedPublicMethods, $publicMethods)) !== 0
         ) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Class %s should not have public methods',
+                'Class "%s" should not have public methods',
                 static::class
             ));
         }
@@ -173,7 +212,7 @@ trait ImmutabilityBehaviour
      *
      * @return string[]
      */
-    protected function getAllowedPublicMethods(): array
+    private function getAllowedPublicMethods(): array
     {
         $allowedInterfaces = \array_unique(\array_merge($this->getAllowedInterfaces(), [ImmutabilityBehaviour::class]));
         $allowedMethods = \array_merge(
@@ -208,7 +247,7 @@ trait ImmutabilityBehaviour
      */
     final public function __call(string $method, array $parameters)
     {
-        throw new ImmutabilityViolationException(\sprintf('Class %s properties cannot be mutated', static::class));
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated', static::class));
     }
 
     /**
@@ -219,7 +258,7 @@ trait ImmutabilityBehaviour
      */
     final public function __set(string $name, $value): void
     {
-        throw new ImmutabilityViolationException(\sprintf('Class %s properties cannot be mutated', static::class));
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated', static::class));
     }
 
     /**
@@ -229,7 +268,7 @@ trait ImmutabilityBehaviour
      */
     final public function __unset(string $name): void
     {
-        throw new ImmutabilityViolationException(\sprintf('Class %s properties cannot be mutated', static::class));
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated', static::class));
     }
 
     /**
