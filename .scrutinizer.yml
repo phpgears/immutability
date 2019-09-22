@@ -8,6 +8,12 @@ build:
   cache:
     directories:
       - vendor/
+  nodes:
+    analysis:
+      project_setup:
+        override: true
+      tests:
+        override: [php-scrutinizer-run]
 
 filter:
   paths: [src/*]
