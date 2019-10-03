@@ -36,7 +36,7 @@ ImmutabilityBehaviour trait enforces you to avoid public properties and mutable 
 
 This mentioned behaviour let alone would run your objects completely useless so you must provide an implementation of the abstract method `getAllowedInterfaces`, returning a list of interfaces whose public methods will be allowed in your class. Even though it is _discouraged_, you can also provide class names as it can prove useful in some cases, use wisely
 
-Few PHP magic methods are allowed to be defined as public, namely __construct,__destruct, __get, __isset, __sleep, __wakeup, __toString, __set_state, __clone, __debugInfo
+Few PHP magic methods are allowed to be defined as public, namely `__construct`, `__destruct`, `__get`, `__isset`, `__sleep`, `__wakeup`, `__toString`, `__set_state`, `__clone`, `__debugInfo`
 
 ```php
 use Gears\Immutability\ImmutabilityBehaviour;
@@ -107,11 +107,11 @@ class MyObject implements MyInterface
 }
 ```
 
-It is of **absolute importance** to either set your class as final or mark your implementation of `getAllowedInterfaces` as final, not fulfilling this requirement will end up with child objects being able to override getAllowedInterfaces method and thus rendering immutability check useless
+It is of **absolute importance** to either set your class as final or mark your implementation of `getAllowedInterfaces` as final, not fulfilling this requirement will end up with possible derived objects being able to override getAllowedInterfaces method and thus rendering immutability assertion useless
 
-Although not mandatory it is advice to make your constructors _protected_ and force developers to create static named constructors
+Although not mandatory it is advised to make your constructors _protected_ and force developers to create static named constructors
 
-From now on you can focus only on those methods defined in your interfaces and ensure they do not mutate your object, this task is up to you only, with the confidence no other developer would mutate your object by accident or intentionally
+From now on you can focus on those methods defined in your interfaces and make sure they do not mutate your object with the confidence no other developer would mutate your object by accident or intentionally, this task is entirely up to you only
 
 ### Example
 

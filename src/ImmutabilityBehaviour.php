@@ -117,11 +117,11 @@ trait ImmutabilityBehaviour
         $stack = $this->getFilteredCallStack();
 
         if (!isset($stack[1])
-            || ($serializable && !\in_array($stack[1]['function'], ['__construct', 'unserialize'], true))
-            || (!$serializable && $stack[1]['function'] !== '__construct')
+            || ($serializable && !\in_array($stack[1]['function'], ['__construct', '__wakeup', 'unserialize'], true))
+            || (!$serializable && !\in_array($stack[1]['function'], ['__construct', '__wakeup']))
         ) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Immutability check must be called from constructor or "unserialize" methods, called from "%s"',
+                'Immutability check only available on constructor, unserialize or __wakeup methods, called from "%s"',
                 isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
             ));
         }
