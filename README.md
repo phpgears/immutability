@@ -36,7 +36,7 @@ ImmutabilityBehaviour trait enforces you to avoid public properties and mutable 
 
 This mentioned behaviour let alone would run your objects completely useless so you must provide an implementation of the abstract method `getAllowedInterfaces`, returning a list of interfaces whose public methods will be allowed in your class. Even though it is _discouraged_, you can also provide class names as it can prove useful in some cases, use wisely
 
-Few PHP magic methods are allowed to be defined as public, namely `__construct`, `__destruct`, `__get`, `__isset`, `__sleep`, `__wakeup`, `__toString`, `__set_state`, `__clone`, `__debugInfo`
+Few PHP magic methods are allowed to be defined as public, namely `__construct`, `__destruct`, `__get`, `__isset`, `__sleep`, `__wakeup`, `__serialize`, `__unserialize`, `__toString`, `__set_state`, `__clone`, `__debugInfo`
 
 ```php
 use Gears\Immutability\ImmutabilityBehaviour;

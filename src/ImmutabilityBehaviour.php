@@ -39,6 +39,8 @@ trait ImmutabilityBehaviour
         '__isset',
         '__sleep',
         '__wakeup',
+        '__serialize',
+        '__unserialize',
         '__toString',
         '__set_state',
         '__clone',
@@ -117,11 +119,14 @@ trait ImmutabilityBehaviour
         $stack = $this->getFilteredCallStack();
 
         if (!isset($stack[1])
-            || ($serializable && !\in_array($stack[1]['function'], ['__construct', '__wakeup', 'unserialize'], true))
-            || (!$serializable && !\in_array($stack[1]['function'], ['__construct', '__wakeup']))
+            || ($serializable
+                && !\in_array($stack[1]['function'], ['__construct', '__wakeup', '__unserialize', 'unserialize'], true))
+            || (!$serializable
+                && !\in_array($stack[1]['function'], ['__construct', '__wakeup', '__unserialize']))
         ) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Immutability check only available on constructor, unserialize or __wakeup methods, called from "%s"',
+                'Immutability check available only on "%s" methods, called from "%s"',
+                \implode('", "', ['__construct', '__wakeup', '__unserialize', 'unserialize']),
                 isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
             ));
         }
