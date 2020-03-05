@@ -57,8 +57,6 @@ class ImmutabilityBehaviourStub implements ImmutabilityBehaviourStubInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param mixed $serialized
      */
     public function unserialize($serialized): void
     {

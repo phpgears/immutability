@@ -59,8 +59,6 @@ class ImmutabilityBehaviourSerializeStub
 
     /**
      * Unserialize.
-     *
-     * @param mixed $serialized
      */
     public function __wakeup(): void
     {
