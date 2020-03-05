@@ -85,8 +85,8 @@ trait ImmutabilityBehaviour
         }
 
         $this->assertCallConstraints();
-        $this->assertPropertiesVisibility();
-        $this->assertMethodsVisibility();
+        $this->assertPropertyVisibility();
+        $this->assertMethodVisibility();
 
         static::$immutabilityCheckMap[$class] = true;
     }
@@ -115,18 +115,16 @@ trait ImmutabilityBehaviour
      */
     private function assertCallConstraints(): void
     {
-        $serializable = \in_array(\Serializable::class, \class_implements($this), true);
         $stack = $this->getFilteredCallStack();
+        $callingMethods = ['__construct', '__wakeup', '__unserialize'];
+        if ($this instanceof \Serializable) {
+            $callingMethods[] = 'unserialize';
+        }
 
-        if (!isset($stack[1])
-            || ($serializable
-                && !\in_array($stack[1]['function'], ['__construct', '__wakeup', '__unserialize', 'unserialize'], true))
-            || (!$serializable
-                && !\in_array($stack[1]['function'], ['__construct', '__wakeup', '__unserialize']))
-        ) {
+        if (!isset($stack[1]) || !\in_array($stack[1]['function'], $callingMethods, true)) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Immutability check available only on "%s" methods, called from "%s"',
-                \implode('", "', ['__construct', '__wakeup', '__unserialize', 'unserialize']),
+                'Immutability check available only through "%s" methods, called from "%s"',
+                \implode('", "', $callingMethods),
                 isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
             ));
         }
@@ -156,7 +154,7 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    private function assertPropertiesVisibility(): void
+    private function assertPropertyVisibility(): void
     {
         $publicProperties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
         if (\count($publicProperties) !== 0) {
@@ -172,20 +170,10 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    private function assertMethodsVisibility(): void
+    private function assertMethodVisibility(): void
     {
         $publicMethods = $this->getClassPublicMethods();
-        \sort($publicMethods);
-
-        $allowedPublicMethods = $this->getAllowedPublicMethods();
-
-        foreach (static::$allowedMagicMethods as $magicMethod) {
-            if (\in_array($magicMethod, $publicMethods, true)) {
-                $allowedPublicMethods[] = $magicMethod;
-            }
-        }
-
-        \sort($allowedPublicMethods);
+        $allowedPublicMethods = $this->getAllowedPublicMethods($publicMethods);
 
         if (\count($publicMethods) > \count($allowedPublicMethods)
             || \count(\array_diff($allowedPublicMethods, $publicMethods)) !== 0
@@ -204,37 +192,55 @@ trait ImmutabilityBehaviour
      */
     private function getClassPublicMethods(): array
     {
-        return \array_filter(\array_map(
+        $publicMethods = \array_filter(\array_map(
             function (\ReflectionMethod $method): string {
                 return !$method->isStatic() ? $method->getName() : '';
             },
             (new \ReflectionObject($this))->getMethods(\ReflectionMethod::IS_PUBLIC)
         ));
+
+        \sort($publicMethods);
+
+        return $publicMethods;
     }
 
     /**
      * Get list of allowed public methods.
      *
+     * @param string[] $publicMethods
+     *
      * @return string[]
      */
-    private function getAllowedPublicMethods(): array
+    private function getAllowedPublicMethods(array $publicMethods): array
     {
-        $allowedInterfaces = \array_unique(\array_merge($this->getAllowedInterfaces(), [ImmutabilityBehaviour::class]));
-        $allowedMethods = \array_merge(
+        $allowedInterfaces = \array_unique(\array_filter(\array_merge(
+            $this->getAllowedInterfaces(),
+            [ImmutabilityBehaviour::class]
+        )));
+        $allowedPublicMethods = \array_merge(
             ...\array_map(
                 function (string $interface): array {
-                    return (new \ReflectionClass($interface))->getMethods(\ReflectionMethod::IS_PUBLIC);
+                    return \array_map(
+                        function (\ReflectionMethod $method): string {
+                            return !$method->isStatic() ? $method->getName() : '';
+                        },
+                        (new \ReflectionClass($interface))->getMethods(\ReflectionMethod::IS_PUBLIC)
+                    );
                 },
                 $allowedInterfaces
             )
         );
 
-        return \array_unique(\array_filter(\array_map(
-            function (\ReflectionMethod $method): string {
-                return !$method->isStatic() ? $method->getName() : '';
-            },
-            $allowedMethods
-        )));
+        foreach ($publicMethods as $publicMethod) {
+            if (\in_array($publicMethod, static::$allowedMagicMethods, true)) {
+                $allowedPublicMethods[] = $publicMethod;
+            }
+        }
+
+        $allowedPublicMethods = \array_unique(\array_filter($allowedPublicMethods));
+        \sort($allowedPublicMethods);
+
+        return $allowedPublicMethods;
     }
 
     /**
