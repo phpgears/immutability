@@ -287,6 +287,6 @@ trait ImmutabilityBehaviour
      */
     final public function __invoke(): void
     {
-        throw new ImmutabilityViolationException('Invocation is not allowed');
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" invocation is not allowed', static::class));
     }
 }
