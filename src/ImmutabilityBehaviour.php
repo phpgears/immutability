@@ -173,10 +173,10 @@ trait ImmutabilityBehaviour
     private function assertMethodVisibility(): void
     {
         $publicMethods = $this->getClassPublicMethods();
-        $allowedPublicMethods = $this->getAllowedPublicMethods($publicMethods);
+        $allowedPublicMethods = $this->getAllowedPublicMethods();
 
         if (\count($publicMethods) > \count($allowedPublicMethods)
-            || \count(\array_diff($allowedPublicMethods, $publicMethods)) !== 0
+            || \count(\array_diff($publicMethods, $allowedPublicMethods)) !== 0
         ) {
             throw new ImmutabilityViolationException(\sprintf(
                 'Class "%s" should not have public methods',
@@ -207,17 +207,16 @@ trait ImmutabilityBehaviour
     /**
      * Get list of allowed public methods.
      *
-     * @param string[] $publicMethods
-     *
      * @return string[]
      */
-    private function getAllowedPublicMethods(array $publicMethods): array
+    private function getAllowedPublicMethods(): array
     {
         $allowedInterfaces = \array_unique(\array_filter(\array_merge(
             $this->getAllowedInterfaces(),
             [ImmutabilityBehaviour::class]
         )));
-        $allowedPublicMethods = \array_merge(
+        $allowedPublicMethods = \array_unique(\array_filter(\array_merge(
+            static::$allowedMagicMethods,
             ...\array_map(
                 function (string $interface): array {
                     return \array_map(
@@ -229,15 +228,8 @@ trait ImmutabilityBehaviour
                 },
                 $allowedInterfaces
             )
-        );
+        )));
 
-        foreach ($publicMethods as $publicMethod) {
-            if (\in_array($publicMethod, static::$allowedMagicMethods, true)) {
-                $allowedPublicMethods[] = $publicMethod;
-            }
-        }
-
-        $allowedPublicMethods = \array_unique(\array_filter($allowedPublicMethods));
         \sort($allowedPublicMethods);
 
         return $allowedPublicMethods;
