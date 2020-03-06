@@ -98,7 +98,7 @@ class ImmutabilityBehaviourTest extends TestCase
         $stub = new ImmutabilityBehaviourSerializeStub('value');
         $serialized = \version_compare(\PHP_VERSION, '7.4.0') >= 0
             ? 'O:64:"Gears\Immutability\Tests\Stub\ImmutabilityBehaviourSerializeStub":1:'
-                . '{s:9:"*parameter";s:5:"value";}'
+                . '{s:9:"parameter";s:5:"value";}'
             : 'O:64:"Gears\Immutability\Tests\Stub\ImmutabilityBehaviourSerializeStub":1:'
                 . "{s:12:\"\000*\000parameter\";s:5:\"value\";}";
 
