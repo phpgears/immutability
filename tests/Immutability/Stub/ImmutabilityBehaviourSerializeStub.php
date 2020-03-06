@@ -66,6 +66,24 @@ class ImmutabilityBehaviourSerializeStub
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function __serialize(): array
+    {
+        return ['parameter' => $this->parameter];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->assertImmutable();
+
+        $this->parameter = $data['parameter'];
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getAllowedInterfaces(): array
