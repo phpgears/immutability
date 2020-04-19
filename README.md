@@ -12,29 +12,29 @@
 
 # Object immutability guard for PHP
 
-Truly object immutability in PHP is impossible by the nature of the language, checking and protecting properties and methods visibility is the closest we can get at this moment in time
+Truly object immutability in PHP is an impossible task by the nature of the language itself, carefully checking and protecting properties and methods visibility is the closest we can get at this moment in time
 
-Crafting an object to make it as immutable as can be requires expertise, dedication and focus so no mutating mechanism slips through developer's hands into the object, that is the reason behind this library, provide a trait to help you with the tedious task of ensuring object immutability
+Crafting an object to make it as immutable as can be requires expertise, dedication and focus so no mutating mechanism slips through developer's hands into the object, that is the reason behind this library, provide a way to help you with the tedious task of ensuring object immutability
 
 ## Installation
 
-Best way to install is using [Composer](https://getcomposer.org/):
+### Composer
 
 ```
 composer require phpgears/immutability
 ```
 
-Then require_once the autoload file:
-
-```php
-require_once './vendor/autoload.php';
-```
-
 ## Usage
 
-ImmutabilityBehaviour trait enforces you to avoid public properties and mutable methods in your class by calling `assertImmutable` method on object construction and `unserialize` methods if Serializable interface is implemented
+Require composer autoload file
 
-This mentioned behaviour let alone would run your objects completely useless so you must provide an implementation of the abstract method `getAllowedInterfaces`, returning a list of interfaces whose public methods will be allowed in your class. Even though it is _discouraged_, you can also provide class names as it can prove useful in some cases, use wisely
+```php
+require './vendor/autoload.php';
+```
+
+`Gears\Immutability\ImmutabilityBehaviour` trait enforces you to avoid public properties and mutable methods in your class by calling `assertImmutable` method on object construction, `__wakeup` method and `unserialize` methods if Serializable interface is implemented
+
+This mentioned behaviour let alone would run your objects completely useless, you must provide an implementation of the abstract method `getAllowedInterfaces`, returning a list of interfaces whose public methods will be allowed in your class. Even though it is _discouraged_, you can also provide class names as it can prove useful in some special cases, anyway it should be used sparsely
 
 Few PHP magic methods are allowed to be defined as public, namely `__construct`, `__destruct`, `__get`, `__isset`, `__sleep`, `__wakeup`, `__serialize`, `__unserialize`, `__toString`, `__set_state`, `__clone`, `__debugInfo`
 
