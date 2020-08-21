@@ -64,7 +64,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Immutability check available only through .+, called from ".+::check"$/'
+            '/^Immutability assertion available only through .+, called from ".+::check"$/'
         );
 
         $stub = new ImmutabilityBehaviourCheckFromMethodStub('value');

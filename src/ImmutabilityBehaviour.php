@@ -123,7 +123,7 @@ trait ImmutabilityBehaviour
 
         if (!isset($stack[1]) || !\in_array($stack[1]['function'], $callingMethods, true)) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Immutability check available only through "%s" methods, called from "%s"',
+                'Immutability assertion available only through "%s" methods, called from "%s"',
                 \implode('", "', $callingMethods),
                 isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
             ));
