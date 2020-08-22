@@ -116,7 +116,11 @@ trait ImmutabilityBehaviour
     private function assertImmutabilityCallConstraints(): void
     {
         $stack = $this->getFilteredImmutabilityCallStack();
-        $callingMethods = $this->getAllowedCallingMethods();
+
+        $callingMethods = ['__construct', '__wakeup', '__unserialize'];
+        if ($this instanceof \Serializable) {
+            $callingMethods[] = 'unserialize';
+        }
 
         if (!isset($stack[1]) || !\in_array($stack[1]['function'], $callingMethods, true)) {
             throw new ImmutabilityViolationException(\sprintf(
@@ -125,21 +129,6 @@ trait ImmutabilityBehaviour
                 isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
             ));
         }
-    }
-
-    /**
-     * Get allowed calling methods.
-     *
-     * @return string[]
-     */
-    private function getAllowedCallingMethods(): array
-    {
-        $callingMethods = ['__construct', '__wakeup', '__unserialize'];
-        if ($this instanceof \Serializable) {
-            $callingMethods[] = 'unserialize';
-        }
-
-        return $callingMethods;
     }
 
     /**
