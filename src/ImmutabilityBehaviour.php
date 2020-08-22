@@ -76,7 +76,7 @@ trait ImmutabilityBehaviour
      */
     final protected function assertImmutable(): void
     {
-        $this->assertSingleCheck();
+        $this->assertImmutabilitySingleCheck();
 
         $class = static::class;
 
@@ -84,7 +84,7 @@ trait ImmutabilityBehaviour
             return;
         }
 
-        $this->assertCallConstraints();
+        $this->assertImmutabilityCallConstraints();
         $this->assertPropertyVisibility();
         $this->assertMethodVisibility();
 
@@ -96,7 +96,7 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    private function assertSingleCheck(): void
+    private function assertImmutabilitySingleCheck(): void
     {
         if ($this->immutabilityAlreadyChecked) {
             throw new ImmutabilityViolationException(\sprintf(
@@ -113,13 +113,10 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    private function assertCallConstraints(): void
+    private function assertImmutabilityCallConstraints(): void
     {
-        $stack = $this->getFilteredCallStack();
-        $callingMethods = ['__construct', '__wakeup', '__unserialize'];
-        if ($this instanceof \Serializable) {
-            $callingMethods[] = 'unserialize';
-        }
+        $stack = $this->getFilteredImmutabilityCallStack();
+        $callingMethods = $this->getAllowedCallingMethods();
 
         if (!isset($stack[1]) || !\in_array($stack[1]['function'], $callingMethods, true)) {
             throw new ImmutabilityViolationException(\sprintf(
@@ -131,13 +128,29 @@ trait ImmutabilityBehaviour
     }
 
     /**
+     * Get allowed calling methods.
+     *
+     * @return string[]
+     */
+    private function getAllowedCallingMethods(): array
+    {
+        $callingMethods = ['__construct', '__wakeup', '__unserialize'];
+        if ($this instanceof \Serializable) {
+            $callingMethods[] = 'unserialize';
+        }
+
+        return $callingMethods;
+    }
+
+    /**
      * Get filter call stack.
      *
      * @return mixed[]
      */
-    private function getFilteredCallStack(): array
+    private function getFilteredImmutabilityCallStack(): array
     {
         $stack = \debug_backtrace();
+
         while (\count($stack) > 0 && $stack[0]['function'] !== 'assertImmutable') {
             \array_shift($stack);
         }
