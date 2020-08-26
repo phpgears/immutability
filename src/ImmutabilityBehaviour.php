@@ -76,7 +76,7 @@ trait ImmutabilityBehaviour
      */
     final protected function assertImmutable(): void
     {
-        $this->assertImmutabilitySingleCheck();
+        $this->assertImmutabilitySingleCall();
 
         $class = static::class;
 
@@ -85,24 +85,23 @@ trait ImmutabilityBehaviour
         }
 
         $this->assertImmutabilityCallConstraints();
-        $this->assertPropertyVisibility();
-        $this->assertMethodVisibility();
+        $this->assertImmutabilityPropertyVisibility();
+        $this->assertImmutabilityMethodVisibility();
 
         static::$immutabilityCheckMap[$class] = true;
     }
 
     /**
-     * Assert single immutability check.
+     * Assert single call.
      *
      * @throws ImmutabilityViolationException
      */
-    private function assertImmutabilitySingleCheck(): void
+    private function assertImmutabilitySingleCall(): void
     {
         if ($this->immutabilityAlreadyChecked) {
-            throw new ImmutabilityViolationException(\sprintf(
-                'Class "%s" was already checked for immutability',
-                static::class
-            ));
+            throw new ImmutabilityViolationException(
+                \sprintf('Class "%s" was already checked for immutability', static::class)
+            );
         }
 
         $this->immutabilityAlreadyChecked = true;
@@ -115,7 +114,7 @@ trait ImmutabilityBehaviour
      */
     private function assertImmutabilityCallConstraints(): void
     {
-        $stack = $this->getFilteredImmutabilityCallStack();
+        $stack = $this->getImmutabilityFilteredCallStack();
 
         $callingMethods = ['__construct', '__wakeup', '__unserialize'];
         if ($this instanceof \Serializable) {
@@ -136,7 +135,7 @@ trait ImmutabilityBehaviour
      *
      * @return mixed[]
      */
-    private function getFilteredImmutabilityCallStack(): array
+    private function getImmutabilityFilteredCallStack(): array
     {
         $stack = \debug_backtrace();
 
@@ -156,14 +155,13 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    private function assertPropertyVisibility(): void
+    private function assertImmutabilityPropertyVisibility(): void
     {
         $publicProperties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
         if (\count($publicProperties) !== 0) {
-            throw new ImmutabilityViolationException(\sprintf(
-                'Class "%s" should not have public properties',
-                static::class
-            ));
+            throw new ImmutabilityViolationException(
+                \sprintf('Class "%s" should not have public properties', static::class)
+            );
         }
     }
 
@@ -172,18 +170,17 @@ trait ImmutabilityBehaviour
      *
      * @throws ImmutabilityViolationException
      */
-    private function assertMethodVisibility(): void
+    private function assertImmutabilityMethodVisibility(): void
     {
-        $publicMethods = $this->getClassPublicMethods();
-        $allowedPublicMethods = $this->getAllowedPublicMethods();
+        $publicMethods = $this->getImmutabilityClassPublicMethods();
+        $allowedPublicMethods = $this->getImmutabilityAllowedPublicMethods();
 
         if (\count($publicMethods) > \count($allowedPublicMethods)
             || \count(\array_diff($publicMethods, $allowedPublicMethods)) !== 0
         ) {
-            throw new ImmutabilityViolationException(\sprintf(
-                'Class "%s" should not have public methods',
-                static::class
-            ));
+            throw new ImmutabilityViolationException(
+                \sprintf('Class "%s" should not have public methods', static::class)
+            );
         }
     }
 
@@ -192,7 +189,7 @@ trait ImmutabilityBehaviour
      *
      * @return string[]
      */
-    private function getClassPublicMethods(): array
+    private function getImmutabilityClassPublicMethods(): array
     {
         $publicMethods = \array_filter(\array_map(
             function (\ReflectionMethod $method): string {
@@ -211,7 +208,7 @@ trait ImmutabilityBehaviour
      *
      * @return string[]
      */
-    private function getAllowedPublicMethods(): array
+    private function getImmutabilityAllowedPublicMethods(): array
     {
         $allowedInterfaces = \array_unique(\array_filter(\array_merge(
             $this->getAllowedInterfaces(),

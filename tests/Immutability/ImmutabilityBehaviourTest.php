@@ -64,7 +64,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Immutability assertion available only through .+, called from ".+::check"$/'
+            '/^Immutability assertion available only through ".+" methods, called from ".+::check"$/'
         );
 
         $stub = new ImmutabilityBehaviourCheckFromMethodStub('value');
@@ -72,7 +72,7 @@ class ImmutabilityBehaviourTest extends TestCase
         $stub->check();
     }
 
-    public function testSingleImmutabilityCheck(): void
+    public function testSingleCall(): void
     {
         $stubReflection = new \ReflectionClass(ImmutabilityBehaviourStub::class);
 
