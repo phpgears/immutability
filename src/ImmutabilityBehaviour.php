@@ -77,18 +77,15 @@ trait ImmutabilityBehaviour
     final protected function assertImmutable(): void
     {
         $this->assertImmutabilitySingleCall();
+        $this->assertImmutabilityCallConstraints();
 
         $class = static::class;
+        if (!isset(static::$immutabilityCheckMap[$class])) {
+            $this->assertImmutabilityPropertyVisibility();
+            $this->assertImmutabilityMethodVisibility();
 
-        if (isset(static::$immutabilityCheckMap[$class])) {
-            return;
+            static::$immutabilityCheckMap[$class] = true;
         }
-
-        $this->assertImmutabilityCallConstraints();
-        $this->assertImmutabilityPropertyVisibility();
-        $this->assertImmutabilityMethodVisibility();
-
-        static::$immutabilityCheckMap[$class] = true;
     }
 
     /**
