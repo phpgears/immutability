@@ -32,7 +32,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+\ImmutabilityBehaviourMutablePropertyStub" should not have public properties$/'
+            '/^Class ".+\ImmutabilityBehaviourMutablePropertyStub" should not have public properties\.$/'
         );
 
         new ImmutabilityBehaviourMutablePropertyStub('value');
@@ -42,7 +42,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+\ImmutabilityBehaviourMutableMethodStub" should not have public methods$/'
+            '/^Class ".+\ImmutabilityBehaviourMutableMethodStub" should not have public methods\.$/'
         );
 
         new ImmutabilityBehaviourMutableMethodStub('value');
@@ -52,7 +52,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class .+ was already checked for immutability$/'
+            '/^Class .+ was already checked for immutability\.$/'
         );
 
         $stub = new ImmutabilityBehaviourMultipleConstructorStub('value');
@@ -64,7 +64,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Immutability assertion available only through ".+" methods, called from ".+::check"$/'
+            '/^Immutability assertion available only through ".+" methods, called from ".+::check"\.$/'
         );
 
         $stub = new ImmutabilityBehaviourCheckFromMethodStub('value');
@@ -119,7 +119,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+" properties cannot be mutated$/'
+            '/^Class ".+" properties cannot be mutated\.$/'
         );
 
         $stub = new ImmutabilityBehaviourStub('value');
@@ -131,7 +131,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+" properties cannot be mutated$/'
+            '/^Class ".+" properties cannot be mutated\.$/'
         );
 
         $stub = new ImmutabilityBehaviourStub('value');
@@ -143,7 +143,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+" properties cannot be mutated$/'
+            '/^Class ".+" properties cannot be mutated\.$/'
         );
 
         $stub = new ImmutabilityBehaviourStub('value');
@@ -155,7 +155,7 @@ class ImmutabilityBehaviourTest extends TestCase
     {
         $this->expectException(ImmutabilityViolationException::class);
         $this->expectExceptionMessageRegExp(
-            '/^Class ".+" invocation is not allowed$/'
+            '/^Class ".+" invocation is not allowed\.$/'
         );
 
         $stub = new ImmutabilityBehaviourStub('value');

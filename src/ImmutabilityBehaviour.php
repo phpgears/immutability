@@ -97,7 +97,7 @@ trait ImmutabilityBehaviour
     {
         if ($this->immutabilityAlreadyChecked) {
             throw new ImmutabilityViolationException(
-                \sprintf('Class "%s" was already checked for immutability', static::class)
+                \sprintf('Class "%s" was already checked for immutability.', static::class)
             );
         }
 
@@ -120,7 +120,7 @@ trait ImmutabilityBehaviour
 
         if (!isset($stack[1]) || !\in_array($stack[1]['function'], $callingMethods, true)) {
             throw new ImmutabilityViolationException(\sprintf(
-                'Immutability assertion available only through "%s" methods, called from "%s"',
+                'Immutability assertion available only through "%s" methods, called from "%s".',
                 \implode('", "', $callingMethods),
                 isset($stack[1]) ? static::class . '::' . $stack[1]['function'] : 'unknown'
             ));
@@ -157,7 +157,7 @@ trait ImmutabilityBehaviour
         $publicProperties = (new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
         if (\count($publicProperties) !== 0) {
             throw new ImmutabilityViolationException(
-                \sprintf('Class "%s" should not have public properties', static::class)
+                \sprintf('Class "%s" should not have public properties.', static::class)
             );
         }
     }
@@ -176,7 +176,7 @@ trait ImmutabilityBehaviour
             || \count(\array_diff($publicMethods, $allowedPublicMethods)) !== 0
         ) {
             throw new ImmutabilityViolationException(
-                \sprintf('Class "%s" should not have public methods', static::class)
+                \sprintf('Class "%s" should not have public methods.', static::class)
             );
         }
     }
@@ -246,7 +246,7 @@ trait ImmutabilityBehaviour
      */
     final public function __call(string $method, array $parameters)
     {
-        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated', static::class));
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated.', static::class));
     }
 
     /**
@@ -257,7 +257,7 @@ trait ImmutabilityBehaviour
      */
     final public function __set(string $name, $value): void
     {
-        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated', static::class));
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated.', static::class));
     }
 
     /**
@@ -267,7 +267,7 @@ trait ImmutabilityBehaviour
      */
     final public function __unset(string $name): void
     {
-        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated', static::class));
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" properties cannot be mutated.', static::class));
     }
 
     /**
@@ -275,6 +275,6 @@ trait ImmutabilityBehaviour
      */
     final public function __invoke(): void
     {
-        throw new ImmutabilityViolationException(\sprintf('Class "%s" invocation is not allowed', static::class));
+        throw new ImmutabilityViolationException(\sprintf('Class "%s" invocation is not allowed.', static::class));
     }
 }
