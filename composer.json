@@ -36,7 +36,6 @@
     "phpstan/phpstan-deprecation-rules": "^0.12",
     "phpstan/phpstan-strict-rules": "^0.12",
     "phpunit/phpunit": "^7.5|^8.0",
-    "povils/phpmnd": "^2.1",
     "roave/security-advisories": "dev-master",
     "sebastian/phpcpd": "^4.0",
     "squizlabs/php_codesniffer": "^3.5",
@@ -70,7 +69,6 @@
     "fix-phpcs": "php-cs-fixer fix --config=.php_cs --verbose",
     "qa-phpcpd": "phpcpd src",
     "qa-phpmd": "phpmd src text unusedcode,naming,design,controversial,codesize",
-    "qa-phpmnd": "phpmnd ./ --exclude=tests",
     "qa-phpstan": "phpstan analyse --configuration=phpstan.neon --memory-limit=2G --no-progress",
     "test-phpunit": "phpunit",
     "test-infection": "infection",
@@ -87,7 +85,6 @@
     "qa": [
       "@qa-phpcpd",
       "@qa-phpmd",
-      "@qa-phpmnd",
       "@qa-phpstan"
     ],
     "security": "composer outdated",
