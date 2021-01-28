@@ -32,9 +32,15 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testMutableProperty(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+\ImmutabilityBehaviourMutablePropertyStub" should not have public properties\.$/'
-        );
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches(
+                '/^Class ".+\ImmutabilityBehaviourMutablePropertyStub" should not have public properties\.$/'
+            );
+        } else {
+            $this->expectExceptionMessageRegExp(
+                '/^Class ".+\ImmutabilityBehaviourMutablePropertyStub" should not have public properties\.$/'
+            );
+        }
 
         new ImmutabilityBehaviourMutablePropertyStub('value');
     }
@@ -42,9 +48,12 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testMutableMethod(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+\ImmutabilityBehaviourMutableMethodStub" should not have public methods\.$/'
-        );
+        $messageRegex = '/^Class ".+\ImmutabilityBehaviourMutableMethodStub" should not have public methods\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         new ImmutabilityBehaviourMutableMethodStub('value');
     }
@@ -52,9 +61,13 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testNotFinal(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+\ImmutabilityBehaviourNotFinalStub" or getAllowedInterfaces method should be final\.$/'
-        );
+        $messageRegex = '/^Class ".+\ImmutabilityBehaviourNotFinalStub"'
+            . ' or getAllowedInterfaces method should be final\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         new ImmutabilityBehaviourNotFinalStub('value');
     }
@@ -62,9 +75,12 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testMultipleConstructorCall(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class .+ was already checked for immutability\.$/'
-        );
+        $messageRegex = '/^Class .+ was already checked for immutability\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         $stub = new ImmutabilityBehaviourMultipleConstructorStub('value');
 
@@ -74,9 +90,12 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testCheckFromMethod(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Immutability assertion available only through ".+" methods, called from ".+::check"\.$/'
-        );
+        $messageRegex = '/^Immutability assertion available only through ".+" methods, called from ".+::check"\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         $stub = new ImmutabilityBehaviourCheckFromMethodStub('value');
 
@@ -129,9 +148,12 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testInvalidMethodCall(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+" properties cannot be mutated\.$/'
-        );
+        $messageRegex = '/^Class ".+" properties cannot be mutated\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         $stub = new ImmutabilityBehaviourStub('value');
 
@@ -141,9 +163,12 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testInvalidMethodSet(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+" properties cannot be mutated\.$/'
-        );
+        $messageRegex = '/^Class ".+" properties cannot be mutated\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         $stub = new ImmutabilityBehaviourStub('value');
 
@@ -153,9 +178,12 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testInvalidMethodUnset(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+" properties cannot be mutated\.$/'
-        );
+        $messageRegex = '/^Class ".+" properties cannot be mutated\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         $stub = new ImmutabilityBehaviourStub('value');
 
@@ -165,9 +193,12 @@ class ImmutabilityBehaviourTest extends TestCase
     public function testInvalidMethodInvoke(): void
     {
         $this->expectException(ImmutabilityViolationException::class);
-        $this->expectExceptionMessageRegExp(
-            '/^Class ".+" invocation is not allowed\.$/'
-        );
+        $messageRegex = '/^Class ".+" invocation is not allowed\.$/';
+        if (\method_exists($this, 'expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegex);
+        } else {
+            $this->expectExceptionMessageRegExp($messageRegex);
+        }
 
         $stub = new ImmutabilityBehaviourStub('value');
 
