@@ -19,6 +19,7 @@ use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourDeprecatedStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMultipleConstructorStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMutableMethodStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourMutablePropertyStub;
+use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourNotFinalStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourSerializeStub;
 use Gears\Immutability\Tests\Stub\ImmutabilityBehaviourStub;
 use PHPUnit\Framework\TestCase;
@@ -46,6 +47,16 @@ class ImmutabilityBehaviourTest extends TestCase
         );
 
         new ImmutabilityBehaviourMutableMethodStub('value');
+    }
+
+    public function testNotFinal(): void
+    {
+        $this->expectException(ImmutabilityViolationException::class);
+        $this->expectExceptionMessageRegExp(
+            '/^Class ".+\ImmutabilityBehaviourNotFinalStub" or getAllowedInterfaces method should be final\.$/'
+        );
+
+        new ImmutabilityBehaviourNotFinalStub('value');
     }
 
     public function testMultipleConstructorCall(): void

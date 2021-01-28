@@ -13,17 +13,26 @@ declare(strict_types=1);
 
 namespace Gears\Immutability\Tests\Stub;
 
+use Gears\Immutability\ImmutabilityBehaviour;
+
 /**
  * ImmutabilityBehaviour trait stub class.
  */
-class ImmutabilityBehaviourMultipleConstructorStub extends ImmutabilityBehaviourStub
+final class ImmutabilityBehaviourMultipleConstructorStub
 {
+    use ImmutabilityBehaviour;
+
+    public function __construct()
+    {
+        $this->assertImmutable();
+    }
+
     /**
      * Call constructor one more time.
      */
     public function callConstructor(): void
     {
-        $this->__construct('');
+        $this->__construct();
     }
 
     /**

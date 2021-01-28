@@ -18,7 +18,7 @@ use Gears\Immutability\ImmutabilityBehaviour;
 /**
  * ImmutabilityBehaviour trait serialize stub class.
  */
-class ImmutabilityBehaviourSerializeStub
+final class ImmutabilityBehaviourSerializeStub
 {
     use ImmutabilityBehaviour;
 
@@ -88,6 +88,6 @@ class ImmutabilityBehaviourSerializeStub
      */
     protected function getAllowedInterfaces(): array
     {
-        return [static::class];
+        return [self::class];
     }
 }

@@ -68,7 +68,7 @@ class ImmutabilityBehaviourStub implements ImmutabilityBehaviourStubInterface
     /**
      * {@inheritdoc}
      */
-    protected function getAllowedInterfaces(): array
+    final protected function getAllowedInterfaces(): array
     {
         return [ImmutabilityBehaviourStubInterface::class];
     }

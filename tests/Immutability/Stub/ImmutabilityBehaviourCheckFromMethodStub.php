@@ -18,7 +18,7 @@ use Gears\Immutability\ImmutabilityBehaviour;
 /**
  * ImmutabilityBehaviour trait stub class.
  */
-class ImmutabilityBehaviourCheckFromMethodStub implements ImmutabilityBehaviourStubInterface
+final class ImmutabilityBehaviourCheckFromMethodStub implements ImmutabilityBehaviourStubInterface
 {
     use ImmutabilityBehaviour;
 

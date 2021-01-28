@@ -13,13 +13,25 @@ declare(strict_types=1);
 
 namespace Gears\Immutability\Tests\Stub;
 
+use Gears\Immutability\ImmutabilityBehaviour;
+
 /**
  * ImmutabilityBehaviour trait stub class.
  */
-final class ImmutabilityBehaviourMutablePropertyStub extends ImmutabilityBehaviourStub
+class ImmutabilityBehaviourNotFinalStub
 {
+    use ImmutabilityBehaviour;
+
+    public function __construct()
+    {
+        $this->assertImmutable();
+    }
+
     /**
-     * @var mixed
+     * {@inheritdoc}
      */
-    public $mutable;
+    protected function getAllowedInterfaces(): array
+    {
+        return [self::class];
+    }
 }

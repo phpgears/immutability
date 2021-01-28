@@ -16,7 +16,7 @@ namespace Gears\Immutability\Tests\Stub;
 /**
  * ImmutabilityBehaviour trait stub class.
  */
-class ImmutabilityBehaviourMutableMethodStub extends ImmutabilityBehaviourStub
+final class ImmutabilityBehaviourMutableMethodStub extends ImmutabilityBehaviourStub
 {
     /**
      * @param string $parameter

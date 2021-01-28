@@ -81,6 +81,7 @@ trait ImmutabilityBehaviour
 
         $class = static::class;
         if (!isset(static::$immutabilityCheckMap[$class])) {
+            $this->assertImmutabilityFinal();
             $this->assertImmutabilityPropertyVisibility();
             $this->assertImmutabilityMethodVisibility();
 
@@ -148,7 +149,28 @@ trait ImmutabilityBehaviour
     }
 
     /**
-     * Check properties visibility.
+     * Assert final.
+     *
+     * @throws ImmutabilityViolationException
+     */
+    private function assertImmutabilityFinal(): void
+    {
+        $reflectionObject = new \ReflectionObject($this);
+
+        if (!$reflectionObject->isFinal()) {
+            $reflectionMethod = $reflectionObject->getMethod('getAllowedInterfaces');
+
+            if (!$reflectionMethod->isFinal()) {
+                throw new ImmutabilityViolationException(\sprintf(
+                    'Class "%s" or getAllowedInterfaces method should be final.',
+                    static::class
+                ));
+            }
+        }
+    }
+
+    /**
+     * Assert properties visibility.
      *
      * @throws ImmutabilityViolationException
      */
@@ -163,7 +185,7 @@ trait ImmutabilityBehaviour
     }
 
     /**
-     * Check methods visibility.
+     * Assert methods visibility.
      *
      * @throws ImmutabilityViolationException
      */
